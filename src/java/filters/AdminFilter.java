@@ -27,10 +27,11 @@ import javax.servlet.http.HttpSession;
 public class AdminFilter implements Filter {
 
     private FilterConfig filterConfig = null;
-    
+
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
+
         HttpSession session = ((HttpServletRequest) request).getSession();
         String username = (String) session.getAttribute("username");
         UserService us = new UserService();
@@ -40,25 +41,22 @@ public class AdminFilter implements Filter {
         } catch (Exception ex) {
             Logger.getLogger(AdminFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        if (user != null && user.getRole().getRoleID()==1) {
+
+        if (user != null && user.getRole().getRoleID() == 1) {
             // yes, go onwards to the servlet or next filter
             chain.doFilter(request, response);
         } else {
             // get out of here!
-            ((HttpServletResponse)response).sendRedirect("home");
+            ((HttpServletResponse) response).sendRedirect("home");
         }
-        
-        
-
     }
 
-    public void destroy() {        
+    public void destroy() {
     }
-    
+
     @Override
-    public void init(FilterConfig filterConfig) {        
-        this.filterConfig = filterConfig;       
+    public void init(FilterConfig filterConfig) {
+        this.filterConfig = filterConfig;
     }
-    
+
 }
