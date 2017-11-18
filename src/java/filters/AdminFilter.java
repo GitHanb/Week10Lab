@@ -5,7 +5,11 @@
  */
 package filters;
 
+import businesslogic.UserService;
+import domainmodel.User;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -18,40 +22,43 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author awarsyle
+ * @author hanzh
  */
-public class AuthenticationFilter implements Filter {
+public class AdminFilter implements Filter {
 
     private FilterConfig filterConfig = null;
-
-    @Override
+    
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
-
-        // this code executes before the servlet
-        // ...
-        // ensure user is authenticated
         HttpSession session = ((HttpServletRequest) request).getSession();
-        if (session.getAttribute("username") != null) {
+        String username = (String) session.getAttribute("username");
+        UserService us = new UserService();
+        User user = null;
+        try {
+            user = us.get(username);
+        } catch (Exception ex) {
+            Logger.getLogger(AdminFilter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (user != null && user.getRole().getRoleID()==1) {
             // yes, go onwards to the servlet or next filter
             chain.doFilter(request, response);
         } else {
             // get out of here!
-            ((HttpServletResponse) response).sendRedirect("login");
+            ((HttpServletResponse)response).sendRedirect("home");
         }
+        
+        
 
-        // this code executes after the servlet
-        // ...
     }
 
+    public void destroy() {        
+    }
+    
     @Override
-    public void destroy() {
+    public void init(FilterConfig filterConfig) {        
+        this.filterConfig = filterConfig;       
     }
-
-    @Override
-    public void init(FilterConfig filterConfig) {
-        this.filterConfig = filterConfig;
-    }
-
+    
 }
