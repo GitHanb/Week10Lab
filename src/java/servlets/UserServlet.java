@@ -1,7 +1,6 @@
 package servlets;
 
 import businesslogic.UserService;
-import domainmodel.Role;
 import domainmodel.User;
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +16,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         UserService us = new UserService();
         String action = request.getParameter("action");
         if (action != null && action.equals("view")) {
@@ -25,18 +24,14 @@ public class UserServlet extends HttpServlet {
             try {
 
                 User user = us.get(selectedUsername);
-              
-                
+
                 request.setAttribute("selectedUser", user);
             } catch (Exception ex) {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        
-        
-        
-        List<User> users = null;        
+
+        List<User> users = null;
         try {
             users = us.getAll();
         } catch (Exception ex) {
@@ -72,13 +67,13 @@ public class UserServlet extends HttpServlet {
         } catch (Exception ex) {
             request.setAttribute("errorMessage", "Whoops.  Could not perform that action.");
         }
-        
+
         List<User> users = null;
         try {
             users = us.getAll();
-            
+
             int number_notes = users.get(0).getNoteList().size();
-            
+
         } catch (Exception ex) {
             Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
