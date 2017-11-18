@@ -52,7 +52,7 @@ public class LoginServlet extends HttpServlet {
         AccountService as = new AccountService();
         if (as.loginHandler(username, password) != null) {
             session.setAttribute("username", username);
-            response.sendRedirect("home");
+            response.sendRedirect("users");
             return;
         } else {
             request.setAttribute("message", "Invalid.  Please try again.");
